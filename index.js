@@ -1,11 +1,12 @@
-var Canvas = require('drawille');
+//var Canvas = require('drawille');
+var Canvas = require('../ansi-canvas');
 var bresenham = require('bresenham');
 var glMatrix = require('gl-matrix');
 var mat2d = glMatrix.mat2d;
 var vec2 = glMatrix.vec2;
 
 function Context(width, height) {
-  this._canvas = new Canvas(width, height);
+  this._canvas = new Canvas(width, height);  
   this._matrix = mat2d.create();
   this._stack = [];
   this._currentPath = [];
@@ -124,6 +125,10 @@ Context.prototype.moveTo = function moveTo(x, y) {
 
 Context.prototype.lineTo = function lineTo(x, y) {
   addPoint(this._matrix, this._currentPath, x, y, true);
+};
+
+Context.prototype.fillText = function lineTo(str, x, y) {
+  this._canvas.fillText(str, x, y)
 };
 
 module.exports = Context;
