@@ -1,12 +1,12 @@
-//var Canvas = require('drawille');
-var Canvas = require('../ansi-canvas');
+var Canvas = require('drawille');
 var bresenham = require('bresenham');
 var glMatrix = require('gl-matrix');
 var mat2d = glMatrix.mat2d;
 var vec2 = glMatrix.vec2;
 
-function Context(width, height) {
-  this._canvas = new Canvas(width, height);  
+function Context(width, height, canvasClass) {
+  var canvasClass = canvasClass || Canvas;
+  this._canvas = new canvasClass(width, height);  
   this._matrix = mat2d.create();
   this._stack = [];
   this._currentPath = [];
