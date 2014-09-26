@@ -14,7 +14,8 @@ var flush;
 if(typeof document == 'undefined') {
   c = new Canvas(w*2, w);
   //non-default canvas implementation:
-  //c = new Canvas(w*2, w, require('../funny-canvas'));
+  //c = new Canvas(w*2, w, require('../ansi-term'));  
+  c.strokeStyle="green"
 
   flush = function() {
     console.log(c._canvas.frame());

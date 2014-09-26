@@ -57,7 +57,16 @@ function quad(m, x, y, w, h, f) {
   var p4 = vec2.transformMat2d(vec2.create(), vec2.fromValues(x+w, y+h), m);
   triangle(p1, p2, p3, f);
   triangle(p3, p2, p4, f);
-}
+};
+
+Context.prototype.__defineSetter__('fillStyle', function(val){
+  this._canvas.fontFg = val
+});
+
+Context.prototype.__defineSetter__('strokeStyle', function(val){
+  this._canvas.color = val
+  this._canvas.fontBg = val
+});
 
 Context.prototype.clearRect = function(x, y, w, h) {
   quad(this._matrix, x, y, w, h, this._canvas.unset.bind(this._canvas));
