@@ -65,7 +65,7 @@ Context.prototype.__defineSetter__('fillStyle', function(val){
 
 Context.prototype.__defineSetter__('strokeStyle', function(val){
   this._canvas.color = val
-  this._canvas.fontBg = val
+  //this._canvas.fontBg = val
 });
 
 Context.prototype.clearRect = function(x, y, w, h) {
@@ -137,7 +137,7 @@ Context.prototype.lineTo = function lineTo(x, y) {
 };
 
 Context.prototype.fillText = function lineTo(str, x, y) {
-  this._canvas.fillText(str, x, y)
+  this._canvas.writeText(str, x, y)
 };
 
 module.exports = Context;
