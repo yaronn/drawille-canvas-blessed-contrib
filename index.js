@@ -86,7 +86,7 @@ Context.prototype.restore = function restore() {
   this._matrix = top;
 };
 
-Context.prototype.translate = function translate(x, y) {
+Context.prototype.translate = function translate(x, y) {  
   mat2d.translate(this._matrix, this._matrix, vec2.fromValues(x, y));
 };
 
@@ -103,13 +103,17 @@ Context.prototype.beginPath = function beginPath() {
 };
 
 Context.prototype.closePath = function closePath() {
+  /*
   this._currentPath.push({
     point: this._currentPath[0].point,
     stroke: false
-  });
+  });*/
 };
 
 Context.prototype.stroke = function stroke() {
+  
+  if (this.lineWidth==0) return;
+
   var set = this._canvas.set.bind(this._canvas);
   for(var i = 0; i < this._currentPath.length - 1; i++) {
     var cur = this._currentPath[i];
@@ -137,7 +141,12 @@ Context.prototype.lineTo = function lineTo(x, y) {
 };
 
 Context.prototype.fillText = function lineTo(str, x, y) {
-  this._canvas.writeText(str, x, y)
+  var v = vec2.transformMat2d(vec2.create(), vec2.fromValues(x, y), this._matrix);
+  this._canvas.writeText(str, Math.floor(v[0]), Math.floor(v[1]))
+};
+
+Context.prototype.measureText = function measureText(str) {
+  return this._canvas.measureText(str)
 };
 
 module.exports = Context;
