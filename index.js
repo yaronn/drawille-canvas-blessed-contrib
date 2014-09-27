@@ -4,9 +4,10 @@ var glMatrix = require('gl-matrix');
 var mat2d = glMatrix.mat2d;
 var vec2 = glMatrix.vec2;
 
-function Context(width, height, canvasClass) {
+function Context(width, height, canvasClass) { 
   var canvasClass = canvasClass || Canvas;
   this._canvas = new canvasClass(width, height);  
+  this.canvas = this._canvas; //compatability
   this._matrix = mat2d.create();
   this._stack = [];
   this._currentPath = [];
