@@ -7,7 +7,7 @@ var vec2 = glMatrix.vec2;
 function Context(width, height, canvasClass) { 
   var canvasClass = canvasClass || Canvas;
   this._canvas = new canvasClass(width, height);  
-  this.canvas = this._canvas; //compatability
+  this.canvas = this._canvas; //compatability  
   this._matrix = mat2d.create();
   this._stack = [];
   this._currentPath = [];
@@ -150,4 +150,14 @@ Context.prototype.measureText = function measureText(str) {
   return this._canvas.measureText(str)
 };
 
+
 module.exports = Context;
+module.exports.Canvas = function(width, height, canvasClass) {
+  
+  var ctx;
+
+  this.getContext = function() {
+   return ctx = ctx || new Context(width, height, canvasClass)
+ }
+
+}
