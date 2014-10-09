@@ -70,7 +70,7 @@ Context.prototype.__defineSetter__('strokeStyle', function(val){
 });
 
 Context.prototype.clearRect = function(x, y, w, h) {
-  quad(this._matrix, x, y, w, h, this._canvas.unset.bind(this._canvas));
+  quad(this._matrix, x, y, w, h, this._canvas.unset.bind(this._canvas));  
 };
 
 Context.prototype.fillRect = function(x, y, w, h) {

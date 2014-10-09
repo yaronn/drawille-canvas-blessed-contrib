@@ -26,7 +26,7 @@ var lineChartData = {
     pointColor : "white",
     pointStrokeColor : "red",
     pointHighlightFill : "green",
-    pointHighlightStroke : "white",
+    pointHighlightStroke : "white",    
     data : [20, 40, 20, 50]
   }
   ]
@@ -40,12 +40,13 @@ var myLine = new Chart(c).Line(lineChartData, {
   scaleGridLineWidth: 0,
   showTooltips: false,
   scaleFontColor: "red",
+  scaleBeginAtZero: true,
   pointLabelFontColor: "green",
   scaleLineColor: "blue",
   showSmallBaseLines: false,
   xLabelSpacing: xLabelSpacing,
   yLabelSpacing: yLabelSpacing,
-  XLineOffset: 1
+  XLineOffset: 1,  
 });
 
 console.log(c._canvas.frame());
