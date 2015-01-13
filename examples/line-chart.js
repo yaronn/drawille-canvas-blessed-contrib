@@ -13,7 +13,7 @@ var yLabelPadding = 7
 //ansi canvas:
 
 var size = {height: 40, width: 80}
-var c = new Canvas(size.width, size.height, require('../../ansi-term'));  
+var c = new Canvas(size.width, size.height, require('ansi-term'));  
 var xLabelPadding = 4
 var yLabelPadding = 2
 

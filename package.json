@@ -21,8 +21,9 @@
   },
   "homepage": "https://github.com/madbence/node-drawille-canvas",
   "dependencies": {
+    "ansi-term": "git+https://git@bitbucket.org/yaronn01/ansi-term.git",
     "bresenham": "0.0.3",
-    "drawille": "^0.1.0",
+    "drawille": "git+https://git@bitbucket.org/yaronn01/node-drawille.git",
     "gl-matrix": "^2.1.0"
   }
 }

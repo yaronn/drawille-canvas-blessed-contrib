@@ -3,7 +3,7 @@ var Canvas = require('../')
 
 
 var size = {height: 40, width: 80}
-var c = new Canvas(size.width, size.height, require('../../ansi-term'));  
+var c = new Canvas(size.width, size.height, require('ansi-term'));  
 
 
 var data = [5, 2, 7, 3, 2]

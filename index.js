@@ -1,4 +1,4 @@
-var Canvas = require('../node-drawille');
+var Canvas = require('drawille');
 var bresenham = require('bresenham');
 var glMatrix = require('gl-matrix');
 var mat2d = glMatrix.mat2d;
