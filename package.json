@@ -1,6 +1,6 @@
 {
   "name": "drawille-canvas-blessed-contrib",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "HTML5 Canvas API for drawille",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/madbence/node-drawille-canvas",
   "dependencies": {
-    "ansi-term": "ansi-term",
+    "ansi-term": ">=0.0.1",
     "bresenham": "0.0.3",
     "drawille-blessed-contrib": ">=0.0.1",
     "gl-matrix": "^2.1.0"
