@@ -1,6 +1,6 @@
 {
   "name": "drawille-canvas-blessed-contrib",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "HTML5 Canvas API for drawille",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "ansi-term": "ansi-term",
     "bresenham": "0.0.3",
-    "drawille": "drawille-blessed-contrib",
+    "drawille-blessed-contrib": ">=0.0.1",
     "gl-matrix": "^2.1.0"
   }
 }
