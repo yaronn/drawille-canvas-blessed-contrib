@@ -23,7 +23,6 @@ exports.colors = {
   , magenta: '255;0;255'
   , cyan: '0;255;255'
   , white: '255;255;255'
-  , normal: '229;229;229'
 };
 
 var methods = ['save', 'restore', 'scale', 'rotate', 'translate', 'transform', 'setTransform', 'resetTransform', 'createLinearGradient', 'createRadialGradient', 'createPattern', 'clearRect', 'fillRect', 'strokeRect', 'beginPath', 'fill', 'stroke', 'drawFocusIfNeeded', 'clip', 'isPointInPath', 'isPointInStroke', 'fillText', 'strokeText', 'measureText', 'drawImage', 'createImageData', 'getImageData', 'putImageData', 'getContextAttributes', 'setLineDash', 'getLineDash', 'setAlpha', 'setCompositeOperation', 'setLineWidth', 'setLineCap', 'setLineJoin', 'setMiterLimit', 'clearShadow', 'setStrokeColor', 'setFillColor', 'drawImageFromRect', 'setShadow', 'closePath', 'moveTo', 'lineTo', 'quadraticCurveTo', 'bezierCurveTo', 'arcTo', 'rect', 'arc', 'ellipse'];
@@ -32,20 +31,47 @@ methods.forEach(function(name) {
   Context.prototype[name] = function() {};
 });
 
-function getColor(color) {
+function getFgCode(color) {
     // String Value
-    if(typeof color == 'string') {
-        return exports.colors[color];
+    if(typeof color == 'string' && color != 'normal') {
+        return '\x1b[38;2;' + exports.colors[color] + 'm';
     }
     // RGB Value
     else if (Array.isArray(color) && color.length == 3)
     {
-        return color[0] + ';' + color[1] + ';' + color[2];
+        return '\x1b[38;2;' + color[0] + ';' + color[1] + ';' + color[2] + 'm';
     }
-    // Default Value
+    // Number
+    else if (typeof color == 'number')
+    {
+        return '\x1b[38;2;' + color + 'm';
+    }
+    // Default
     else
     {
-        return exports.colors['normal'];
+        return '\x1b[39m'
+    }
+}
+
+function getBgCode(color) {
+    // String Value
+    if(typeof color == 'string' && color != 'normal') {
+        return '\x1b[48;2;' + exports.colors[color] + 'm';
+    }
+    // RGB Value
+    else if (Array.isArray(color) && color.length == 3)
+    {
+        return '\x1b[48;2;' + color[0] + ';' + color[1] + ';' + color[2] + 'm';
+    }
+    // Number
+    else if (typeof color == 'number')
+    {
+        return '\x1b[48;2;' + color + 'm';
+    }
+    // Default
+    else
+    {
+        return '\x1b[49m'
     }
 }
 
@@ -186,11 +212,11 @@ Canvas.prototype.writeText = function(str, x, y) {
     this.chars[coord+i]=str[i]
   }
 
-  var bg = getColor(this.fontBg);
-  var fg = getColor(this.fontFg);
+  var bg = getBgCode(this.fontBg);
+  var fg = getFgCode(this.fontFg);
   
-  this.chars[coord] = '\x1b[38;2;' + fg + 'm' + '\x1b[48;2;' + bg + 'm' +  this.chars[coord]
-  this.chars[coord+str.length-1] += '\033[39m\033[49m'
+  this.chars[coord] = fg + bg + this.chars[coord]
+  this.chars[coord+str.length-1] += '\x1b[39m\x1b[49m'
 }
 
 module.exports = Context;
