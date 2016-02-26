@@ -1,6 +1,7 @@
 var Canvas = require('drawille-blessed-contrib');
 var bresenham = require('bresenham');
 var glMatrix = require('gl-matrix');
+var x256 = require('x256');
 var mat2d = glMatrix.mat2d;
 var vec2 = glMatrix.vec2;
 
@@ -15,14 +16,14 @@ function Context(width, height, canvasClass) {
 }
 
 exports.colors = {
-    black: '0;0;0'
-  , red: '255;0;0'
-  , green: '0;255;0'
-  , yellow: '255;255;0'
-  , blue: '0;0;255'
-  , magenta: '255;0;255'
-  , cyan: '0;255;255'
-  , white: '255;255;255'
+    black: 0
+  , red: 1
+  , green: 2
+  , yellow: 3
+  , blue: 4
+  , magenta: 5
+  , cyan: 6
+  , white: 7
 };
 
 var methods = ['save', 'restore', 'scale', 'rotate', 'translate', 'transform', 'setTransform', 'resetTransform', 'createLinearGradient', 'createRadialGradient', 'createPattern', 'clearRect', 'fillRect', 'strokeRect', 'beginPath', 'fill', 'stroke', 'drawFocusIfNeeded', 'clip', 'isPointInPath', 'isPointInStroke', 'fillText', 'strokeText', 'measureText', 'drawImage', 'createImageData', 'getImageData', 'putImageData', 'getContextAttributes', 'setLineDash', 'getLineDash', 'setAlpha', 'setCompositeOperation', 'setLineWidth', 'setLineCap', 'setLineJoin', 'setMiterLimit', 'clearShadow', 'setStrokeColor', 'setFillColor', 'drawImageFromRect', 'setShadow', 'closePath', 'moveTo', 'lineTo', 'quadraticCurveTo', 'bezierCurveTo', 'arcTo', 'rect', 'arc', 'ellipse'];
@@ -34,44 +35,44 @@ methods.forEach(function(name) {
 function getFgCode(color) {
     // String Value
     if(typeof color == 'string' && color != 'normal') {
-        return '\x1b[38;2;' + exports.colors[color] + 'm';
+        return '\033[3' + exports.colors[color] + 'm';
     }
     // RGB Value
     else if (Array.isArray(color) && color.length == 3)
     {
-        return '\x1b[38;2;' + color[0] + ';' + color[1] + ';' + color[2] + 'm';
+        return '\033[38;5;' + x256(color[0],color[1],color[2]) + 'm';
     }
     // Number
     else if (typeof color == 'number')
     {
-        return '\x1b[38;2;' + color + 'm';
+        return '\033[38;5;' + color + 'm';
     }
     // Default
     else
     {
-        return '\x1b[39m'
+        return '\033[39m'
     }
 }
 
 function getBgCode(color) {
     // String Value
     if(typeof color == 'string' && color != 'normal') {
-        return '\x1b[48;2;' + exports.colors[color] + 'm';
+        return '\033[4' + exports.colors[color] + 'm';
     }
     // RGB Value
     else if (Array.isArray(color) && color.length == 3)
     {
-        return '\x1b[48;2;' + color[0] + ';' + color[1] + ';' + color[2] + 'm';
+        return '\033[48;5;' + x256(color[0],color[1],color[2]) + 'm';
     }
     // Number
     else if (typeof color == 'number')
     {
-        return '\x1b[48;2;' + color + 'm';
+        return '\033[48;5;' + color + 'm';
     }
     // Default
     else
     {
-        return '\x1b[49m'
+        return '\033[49m'
     }
 }
 
@@ -214,10 +215,55 @@ Canvas.prototype.writeText = function(str, x, y) {
 
   var bg = getBgCode(this.fontBg);
   var fg = getFgCode(this.fontFg);
-  
+
   this.chars[coord] = fg + bg + this.chars[coord]
-  this.chars[coord+str.length-1] += '\x1b[39m\x1b[49m'
+  this.chars[coord+str.length-1] += '\033[39m\033[49m'
 }
+
+var map = [
+  [0x1, 0x8],
+  [0x2, 0x10],
+  [0x4, 0x20],
+  [0x40, 0x80]
+]
+
+Canvas.prototype.set = function(x,y) {
+    if(!(x >= 0 && x < this.width && y >= 0 && y < this.height)) {
+      return;
+    }
+    
+    var coord = this.getCoord(x, y)
+    var mask = map[y%4][x%2];
+
+    this.content[coord] |= mask;
+    this.colors[coord] = getFgCode(this.color);
+    this.chars[coord] = null
+}
+
+
+Canvas.prototype.frame = function frame(delimiter) {
+  delimiter = delimiter || '\n';
+  var result = [];
+
+  for(var i = 0, j = 0; i < this.content.length; i++, j++) {
+    if(j == this.width/2) {
+      result.push(delimiter);
+      j = 0;
+    }
+    if (this.chars[i]) {
+      result.push(this.chars[i])
+    }
+    else if(this.content[i] == 0) {
+      result.push(' ');
+    } else {   
+        var colorCode = this.colors[i];
+        result.push(colorCode+String.fromCharCode(0x2800 + this.content[i]) + '\033[39m')      
+      //result.push(String.fromCharCode(0x2800 + this.content[i]))      
+    }
+  }
+  result.push(delimiter);
+  return result.join('');
+};
 
 module.exports = Context;
 module.exports.Canvas = function(width, height, canvasClass) {
@@ -225,6 +271,7 @@ module.exports.Canvas = function(width, height, canvasClass) {
   var ctx;
 
   this.getContext = function() {
+      console.log(width,height)
    return ctx = ctx || new Context(width, height, canvasClass)
  }
 

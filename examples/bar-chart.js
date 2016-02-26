@@ -3,7 +3,7 @@ var Canvas = require('../')
 
 
 var size = {height: 40, width: 80}
-var c = new Canvas(size.width, size.height, require('ansi-term'));  
+var c = new Canvas(size.width, size.height);
 
 
 var data = [5, 2, 7, 3, 2]
@@ -26,7 +26,7 @@ data.forEach(function(n){
 });
 
 
-c.strokeStyle = 'blue'
+c.strokeStyle = [255,123,0]
 
 
 x = 3;
