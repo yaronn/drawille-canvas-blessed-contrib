@@ -4,6 +4,7 @@ var glMatrix = require('gl-matrix');
 var mat2d = glMatrix.mat2d;
 var vec2 = glMatrix.vec2;
 
+
 function Context(width, height, canvasClass) { 
   var canvasClass = canvasClass || Canvas;
   this._canvas = new canvasClass(width, height);  
@@ -13,11 +14,40 @@ function Context(width, height, canvasClass) {
   this._currentPath = [];
 }
 
+exports.colors = {
+    black: '0;0;0'
+  , red: '255;0;0'
+  , green: '0;255;0'
+  , yellow: '255;255;0'
+  , blue: '0;0;255'
+  , magenta: '255;0;255'
+  , cyan: '0;255;255'
+  , white: '255;255;255'
+  , normal: '229;229;229'
+};
+
 var methods = ['save', 'restore', 'scale', 'rotate', 'translate', 'transform', 'setTransform', 'resetTransform', 'createLinearGradient', 'createRadialGradient', 'createPattern', 'clearRect', 'fillRect', 'strokeRect', 'beginPath', 'fill', 'stroke', 'drawFocusIfNeeded', 'clip', 'isPointInPath', 'isPointInStroke', 'fillText', 'strokeText', 'measureText', 'drawImage', 'createImageData', 'getImageData', 'putImageData', 'getContextAttributes', 'setLineDash', 'getLineDash', 'setAlpha', 'setCompositeOperation', 'setLineWidth', 'setLineCap', 'setLineJoin', 'setMiterLimit', 'clearShadow', 'setStrokeColor', 'setFillColor', 'drawImageFromRect', 'setShadow', 'closePath', 'moveTo', 'lineTo', 'quadraticCurveTo', 'bezierCurveTo', 'arcTo', 'rect', 'arc', 'ellipse'];
 
 methods.forEach(function(name) {
   Context.prototype[name] = function() {};
 });
+
+function getColor(color) {
+    // String Value
+    if(typeof color == 'string') {
+        return exports.colors[color];
+    }
+    // RGB Value
+    else if (Array.isArray(color) && color.length == 3)
+    {
+        return color[0] + ';' + color[1] + ';' + color[2];
+    }
+    // Default Value
+    else
+    {
+        return exports.colors['normal'];
+    }
+}
 
 function br(p1, p2) {
   return bresenham(
@@ -150,6 +180,18 @@ Context.prototype.measureText = function measureText(str) {
   return this._canvas.measureText(str)
 };
 
+Canvas.prototype.writeText = function(str, x, y) {  
+  var coord = this.getCoord(x, y)
+  for (var i=0; i<str.length; i++) {    
+    this.chars[coord+i]=str[i]
+  }
+
+  var bg = getColor(this.fontBg);
+  var fg = getColor(this.fontFg);
+  
+  this.chars[coord] = '\x1b[38;2;' + fg + 'm' + '\x1b[48;2;' + bg + 'm' +  this.chars[coord]
+  this.chars[coord+str.length-1] += '\033[39m\033[49m'
+}
 
 module.exports = Context;
 module.exports.Canvas = function(width, height, canvasClass) {
