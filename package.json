@@ -24,6 +24,7 @@
     "ansi-term": ">=0.0.1",
     "bresenham": "0.0.3",
     "drawille-blessed-contrib": ">=0.0.1",
+    "x256": ">=0.0.1",
     "gl-matrix": "^2.1.0"
   }
 }

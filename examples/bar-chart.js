@@ -26,7 +26,7 @@ data.forEach(function(n){
 });
 
 
-c.strokeStyle = 'blue'
+c.strokeStyle = [123,123,50]
 
 
 x = 3;
