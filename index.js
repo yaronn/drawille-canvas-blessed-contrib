@@ -271,7 +271,6 @@ module.exports.Canvas = function(width, height, canvasClass) {
   var ctx;
 
   this.getContext = function() {
-      console.log(width,height)
    return ctx = ctx || new Context(width, height, canvasClass)
  }
 

@@ -13,7 +13,7 @@ var yLabelPadding = 7
 //ansi canvas:
 
 var size = {height: 40, width: 80}
-var c = new Canvas(size.width, size.height);
+var c = new Canvas(size.width, size.height, require('ansi-term'));  
 var xLabelPadding = 4
 var yLabelPadding = 2
 
@@ -45,7 +45,7 @@ function getYPixel(val) {
 }
 
 c.strokeStyle = 'white'
-c.fillStyle=[0,255,128]
+c.fillStyle="green"
 
 c.clearRect(0, 0, c.width, c.height);
 
@@ -72,7 +72,7 @@ for(var i = 1; i < data.values.length; i ++) {
 
 c.stroke();
 
-c.strokeStyle = [128,0,0]
+c.strokeStyle = 'blue';
 
 // Draw the axises
 c.beginPath();
